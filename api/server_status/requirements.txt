@@ -1,0 +1,4 @@
+Flask==1.1.2
+python_valve==0.2.1
+PyJWT==2.1.0
+valve==0.0.0
