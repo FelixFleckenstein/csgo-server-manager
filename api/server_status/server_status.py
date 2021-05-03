@@ -3,9 +3,35 @@ from flask import request
 import valve.rcon
 import jwt
 import os
+import mariadb
 import traceback
+import json
 
 app = Flask(__name__)
+
+config = {
+	'host': '202.61.251.79',
+	'port': 3307,
+	'user': 'csgo-manager',
+	'password': os.environ['CSGO_MYSQL_PASS'],
+	'database': 'CSGO-MANAGER'
+}
+
+@app.route('/api/server-status/getServer')
+def getServerList():
+	conn = mariadb.connect(**config)
+	cur = conn.cursor()
+	cur.execute("select name, port, gotv_port, rcon_pw from server")
+	
+	data=[]
+	for (name, port, gotv_port, rcon_pw) in cur:
+		#print(f"First Name: {name}, Last Name: {password}")
+		data.append({'name': name, 'IP': '202.61.251.79', 'port': port, 'gotvPort': gotv_port, 'rconPW': rcon_pw})
+
+	jsonData = json.dumps(data)
+	print(jsonData)
+
+	return jsonData
 
 @app.route('/api/server-status/status')
 def getServerStatus():
