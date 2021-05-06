@@ -1,33 +1,34 @@
 import React from 'react';
 import '../App/App.css';
+import update from 'react-addons-update';	
 
 export default class ServerStatus extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       server: [],
-      lol: "",
     }
-
-    this.data = []
   }
 
-  async componentDidMount() {
+  componentDidMount() {
 	  const sso = sessionStorage.getItem('token');
 
-    await fetch('/api/server-status/getServer').then(res => res.json()).then(data => {
-      //console.log(data);
+    fetch('/api/server-status/getServer').then(res => res.json()).then(data => {
+      let i = 0;
       for(const x of data) {
-        this.data.push([x.name, x.IP, x.port, x.gotvPort, x.rconPW])
+        fetch('/api/server-status/status?ip=' + x.IP + '&port=' + x.port + '&pw=' + x.rconPW + '&name=' + x.name + '&goTV=' + x.gotvPort + '&sso=' + sso).then(res => res.json()).then(data => {
+          this.setState(update(this.state, {
+            server: {
+              [i]: {
+                $set: data
+              }
+            }
+          }));
+          
+          i++;
+        });
       }
     });
-
-    for(const x of this.data.entries()) {
-      fetch('/api/server-status/status?ip=' + x[1][1] + '&port=' + x[1][2] + '&pw=' + x[1][4] + '&name=' + x[1][0] + '&goTV=' + x[1][3] + '&sso=' + sso).then(res => res.json()).then(data => {
-        this.state.server[x[0]] = data;
-        this.setState( {lol: "lul"})
-      });
-    } 
   }
 
   render() {
