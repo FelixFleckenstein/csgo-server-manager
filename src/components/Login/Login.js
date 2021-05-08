@@ -33,7 +33,6 @@ export default function Login({ setToken }) {
       username,
       password
     );
-	console.log(token)
     setToken(token);
 	window.location.reload();
   }

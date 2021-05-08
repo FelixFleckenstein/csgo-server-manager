@@ -13,7 +13,7 @@ export default class ServerStatus extends React.Component {
   componentDidMount() {
 	  const sso = sessionStorage.getItem('token');
 
-    fetch('/api/server-status/getServer').then(res => res.json()).then(data => {
+    fetch('/api/server-status/getServer?sso=' + sso).then(res => res.json()).then(data => {
       let i = 0;
       for(const x of data) {
         fetch('/api/server-status/status?ip=' + x.IP + '&port=' + x.port + '&pw=' + x.rconPW + '&name=' + x.name + '&goTV=' + x.gotvPort + '&sso=' + sso).then(res => res.json()).then(data => {

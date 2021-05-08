@@ -19,17 +19,26 @@ config = {
 
 @app.route('/api/server-status/getServer')
 def getServerList():
-	conn = mariadb.connect(**config)
-	cur = conn.cursor()
-	cur.execute("select svr.name, par.ip, par.port, par.gotv_port, svr.rcon_pw from server svr join server_param par on svr.id = par.server_id")
-	
-	data=[]
-	for (name, ip, port, gotv_port, rcon_pw) in cur:
-		#print(f"First Name: {name}, Last Name: {password}")
-		data.append({'name': name, 'IP': ip, 'port': port, 'gotvPort': gotv_port, 'rconPW': rcon_pw})
+	try:
+		sso = request.args.get('sso')
+		payload = jwt.decode(sso, os.environ['JWT_PASS'], algorithms=['HS256'])
+		isAdmin = 'admin' in payload and payload['admin']
+	except:
+		print("Error: Authentication failed")
 
-	jsonData = json.dumps(data)
-	print(jsonData)
+	jsonData = ""
+	if isAdmin:
+		conn = mariadb.connect(**config)
+		cur = conn.cursor()
+		cur.execute("select svr.name, par.ip, par.port, par.gotv_port, svr.rcon_pw from server svr join server_param par on svr.id = par.server_id")
+		
+		data=[]
+		for (name, ip, port, gotv_port, rcon_pw) in cur:
+			#print(f"First Name: {name}, Last Name: {password}")
+			data.append({'name': name, 'IP': ip, 'port': port, 'gotvPort': gotv_port, 'rconPW': rcon_pw})
+
+		jsonData = json.dumps(data)
+		print(jsonData)
 
 	return jsonData
 

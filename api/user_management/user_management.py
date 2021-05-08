@@ -9,7 +9,6 @@ import hashlib
 app = Flask(__name__)
 
 config = {
-#	'host': '127.0.0.1',
 	'host': '202.61.251.79',
 	'port': 3307,
 	'user': 'csgo-manager',

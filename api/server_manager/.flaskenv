@@ -1,0 +1,2 @@
+FLASK_APP=server_manager.py
+FLASK_ENV=development
