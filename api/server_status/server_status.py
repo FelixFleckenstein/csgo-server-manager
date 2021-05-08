@@ -21,12 +21,12 @@ config = {
 def getServerList():
 	conn = mariadb.connect(**config)
 	cur = conn.cursor()
-	cur.execute("select name, port, gotv_port, rcon_pw from server")
+	cur.execute("select svr.name, par.ip, par.port, par.gotv_port, svr.rcon_pw from server svr join server_param par on svr.id = par.server_id")
 	
 	data=[]
-	for (name, port, gotv_port, rcon_pw) in cur:
+	for (name, ip, port, gotv_port, rcon_pw) in cur:
 		#print(f"First Name: {name}, Last Name: {password}")
-		data.append({'name': name, 'IP': '202.61.251.79', 'port': port, 'gotvPort': gotv_port, 'rconPW': rcon_pw})
+		data.append({'name': name, 'IP': ip, 'port': port, 'gotvPort': gotv_port, 'rconPW': rcon_pw})
 
 	jsonData = json.dumps(data)
 	print(jsonData)
