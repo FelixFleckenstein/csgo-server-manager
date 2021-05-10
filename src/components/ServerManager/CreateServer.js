@@ -3,7 +3,7 @@ import '../App/App.css';
 import update from 'react-addons-update';
 
 async function sendRequest(serverName, serverTyp, serverPW, rconPW, sso) {
-	const token = fetch('/api/server-manager/createServer?sso=' + sso, {
+	const connString = fetch('/api/server-manager/createServer?sso=' + sso, {
 	  method: 'POST',
 	  headers: {
 		'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'
@@ -22,11 +22,10 @@ async function sendRequest(serverName, serverTyp, serverPW, rconPW, sso) {
 	  		+ rconPW
 	  		+'\n------WebKitFormBoundary7MA4YWxkTrZu0gW--')
 	}).then(res => res.json()).then(data => {
-        console.log(data.token)
-		return data.token
+		return data.connString
       });
 
-	return token
+	return connString
 }
 
 export default function Login() {
@@ -37,11 +36,13 @@ export default function Login() {
 	const [serverPW, setServerPW] = useState();
 	const [rconPW, setRconPW] = useState();
 
+	const [connString, setConnString] = useState();
+
 	const handleSubmit = async e => {
 		e.preventDefault();
 		const sso = sessionStorage.getItem('token');
-		const response = await sendRequest(serverName, serverTyp, serverPW, rconPW, sso);
-		window.location.reload();
+		await sendRequest(serverName, serverTyp, serverPW, rconPW, sso).then(response => {setConnString(response)})
+		//window.location.reload();
 	}
 
 	return (
@@ -72,6 +73,9 @@ export default function Login() {
 						</tr>
 					</table>
 				</form>
+
+				<h2>{connString}</h2>
+
 			</header>
 		</div>
 	);

@@ -16,7 +16,6 @@ async function loginUser(user, pass) {
 	  		+ pass
 	  		+'\n------WebKitFormBoundary7MA4YWxkTrZu0gW--')
 	}).then(res => res.json()).then(data => {
-        console.log(data.token)
 		return data.token
       });
 

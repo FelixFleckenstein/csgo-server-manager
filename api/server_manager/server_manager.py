@@ -54,6 +54,7 @@ def createServer():
 			bashCommand = 'docker run -d --net=host -e PORT=' + str(serverPort) + ' -e TV_PORT=' + str(serverTvPort) + ' -e TOKEN=' + str(serverToken) + ' -e CFG_HOST="' + str(serverLabel) + '" -e CFG_RCON="' + str(rconPW) + '" -e CFG_PASS="' + str(serverPW) + '" --name ' + str(serverName) + ' ' + dockerImage
 			print("Startline: " + bashCommand)
 			subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+			return {"connString": "connect 202.61.251.79:" + str(serverPort) + "; password " + str(serverPW)}
 
 	return ""
 
