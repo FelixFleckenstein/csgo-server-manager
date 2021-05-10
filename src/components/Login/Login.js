@@ -21,7 +21,7 @@ async function loginUser(user, pass) {
       });
 
 	return token
-   }
+}
 
 export default function Login({ setToken }) {
   const [username, setUserName] = useState();
